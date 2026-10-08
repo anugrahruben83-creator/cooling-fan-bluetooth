@@ -19,6 +19,9 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v3
+
     - name: Generate Android Project Structure
       run: |
         mkdir -p app/src/main/java/com/example/pococooler
@@ -47,8 +50,8 @@ jobs:
         # 2. build.gradle.kts (Root)
         cat << 'EOF' > build.gradle.kts
         plugins {
-            id("com.android.application") version "8.2.0" apply false
-            id("org.jetbrains.kotlin.android") version "1.9.20" apply false
+            id("com.android.application") version "8.1.4" apply false
+            id("org.jetbrains.kotlin.android") version "1.8.10" apply false
         }
         EOF
 
@@ -61,12 +64,12 @@ jobs:
 
         android {
             namespace = "com.example.pococooler"
-            compileSdk = 34
+            compileSdk = 33
 
             defaultConfig {
                 applicationId = "com.example.pococooler"
                 minSdk = 26
-                targetSdk = 34
+                targetSdk = 33
                 versionCode = 1
                 versionName = "1.0"
             }
@@ -86,9 +89,9 @@ jobs:
         }
 
         dependencies {
-            implementation("androidx.core:core-ktx:1.12.0")
+            implementation("androidx.core:core-ktx:1.10.1")
             implementation("androidx.appcompat:appcompat:1.6.1")
-            implementation("com.google.android.material:material:1.11.0")
+            implementation("com.google.android.material:material:1.9.0")
             implementation("androidx.constraintlayout:constraintlayout:2.1.4")
         }
         EOF
@@ -104,7 +107,6 @@ jobs:
 
             <application
                 android:allowBackup="true"
-                android:icon="@mipmap/ic_launcher"
                 android:label="POCO Cooler"
                 android:supportsRtl="true"
                 android:theme="@style/Theme.AppCompat.Light.DarkActionBar">
@@ -211,11 +213,8 @@ jobs:
         }
         EOF
 
-    - name: Setup Gradle Wrapper
-      run: gradle wrapper
-
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug
+    - name: Build Debug APK with Gradle
+      run: gradle assembleDebug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
